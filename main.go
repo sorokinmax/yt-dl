@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"io"
-	"log"
 	"net/url"
 	"os"
 	"strconv"
@@ -12,13 +11,17 @@ import (
 	"github.com/kkdai/youtube"
 )
 
+const version = "v.1.0.0"
+
 const DEBUG = false
 
 func main() {
+	fmt.Printf("yt-dl %s\n", version)
 	var videoID string
+
 	if !DEBUG {
 		if len(os.Args[1:]) != 1 {
-			fmt.Println("Usage:", os.Args[0], "VideoID_or_URL")
+			fmt.Print("Usage:", os.Args[0], "VideoID_or_URL")
 			return
 		}
 		videoID = os.Args[1]
@@ -33,14 +36,15 @@ func main() {
 			q := u.Query()
 			videoID = q.Get("v")
 		}
-		log.Println(videoID)
 
 		if videoID == "" {
-			log.Fatal("Video ID is required")
+			fmt.Print("Video ID is required")
+			return
 		}
 	} else {
 		videoID = "QH2-TGUlwu4"
 	}
+
 	client := youtube.Client{}
 
 	video, err := client.GetVideo(videoID)
